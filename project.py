@@ -2,7 +2,7 @@ import pandas
 import pandas as pd
 import numpy as np
 
-dataframe = pd.read_csv("./data/result.csv", sep=";")
+dataframe = pd.read_csv("./data/result_new.csv", sep=";")
 
 print(dataframe.head())
 
@@ -25,4 +25,4 @@ for index, row in dataframe.iterrows():
         #      "diff_level": row["diff_level"]}, ignore_index=True)
         colorPLay = 0 if colorPLay == 1 else 1
 
-print(res.to_csv("export.csv",index=False))
+print(res.to_csv("export_new.csv",index=False))

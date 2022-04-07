@@ -12,12 +12,15 @@ from sklearn.neural_network import MLPClassifier
 # Récupération des données
 
 
-dataframe = pandas.read_csv('export.csv')
+dataframe = pandas.read_csv('export_new.csv')
 dataframe.sample(frac=1)
 x = dataframe
 y = dataframe["diff_level"]
 
-del dataframe["diff_level"]
+# y.loc[y < 0] = -1
+# y.loc[y > 0] = 1
+
+del x["diff_level"]
 
 x_train, x_test, y_train, y_test = train_test_split(x, y)
 
@@ -31,7 +34,7 @@ model = tf.keras.models.Sequential(
 model.summary()
 mse = tf.keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
 model.compile(loss='mse', optimizer='adam', metrics=['mse', 'mae', 'accuracy'])
-history = model.fit(x_train, y_train, epochs=100, batch_size=64, verbose=1, validation_split=0.2)
+history = model.fit(x_train, y_train, epochs=100, batch_size=32, verbose=1, validation_split=0.2)
 
 plt.plot(history.history['mse'])
 plt.plot(history.history['val_mse'])
@@ -40,3 +43,10 @@ plt.ylabel('mse')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.show()
+
+print(model.evaluate(x_test, y_test))
+
+
+classifier = MLPClassifier()
+classifier.fit(x_train, y_train)
+print(classifier.score(x_test, y_test))
