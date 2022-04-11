@@ -42,7 +42,7 @@ x_train, x_test, y_train, y_test = lib.normalize(x_train, x_test, y_train, y_tes
 model = NeuralNetworkClassificationModel(nbColumns, 17)
 
 learning_rate = 0.01
-criterion = nn.NLLLoss()
+criterion = nn.CrossEntropyLoss()
 
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
@@ -70,3 +70,6 @@ test_acc = lib.get_accuracy_multiclass(predictions_test, y_test)
 
 print(f"Training Accuracy: {round(train_acc*100,3)}")
 print(f"Test Accuracy: {round(test_acc*100,3)}")
+
+torch.save(model.state_dict(), "torch.pt")
+torch.save(model, "torch_all.pt")
