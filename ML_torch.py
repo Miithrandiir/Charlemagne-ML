@@ -60,12 +60,18 @@ num_epochs = 2000
 train_losses = np.zeros(num_epochs)
 test_losses = np.zeros(num_epochs)
 
-train_losses, test_losses = lib.train_network(model, optimizer, criterion, x_train, y_train, x_test, y_test, num_epochs,
+train_losses, test_losses, test_mse, train_mse = lib.train_network(model, optimizer, criterion, x_train, y_train, x_test, y_test, num_epochs,
                                               train_losses, test_losses)
 
 plt.figure(figsize=(10, 10))
 plt.plot(train_losses, label='train loss')
 plt.plot(test_losses, label='test loss')
+plt.legend()
+plt.show()
+
+plt.figure(figsize=(10, 10))
+plt.plot(train_mse, label='train mse')
+plt.plot(test_mse, label='test mse')
 plt.legend()
 plt.show()
 

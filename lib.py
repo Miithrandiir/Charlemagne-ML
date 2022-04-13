@@ -4,6 +4,7 @@ import numpy as np
 import pandas
 import tqdm
 import torch
+import torch.nn as nn
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -67,6 +68,10 @@ def correlation_matrix(dataframe: pandas.DataFrame):
 
 
 def train_network(model, optimizer, criterion, X_train, y_train, X_test, y_test, num_epochs, train_losses, test_losses):
+    train_mse = np.zeros(num_epochs)
+    test_mse = np.zeros(num_epochs)
+    mse = nn.MSELoss()
+
     for epoch in tqdm.trange(num_epochs):
         # clear out the gradients from the last step loss.backward()
         optimizer.zero_grad()
@@ -89,11 +94,16 @@ def train_network(model, optimizer, criterion, X_train, y_train, X_test, y_test,
         train_losses[epoch] = loss_train.item()
         test_losses[epoch] = loss_test.item()
 
+        mse_test = mse(torch.max(y_pred, 1).values, y_train)
+
+        train_mse[epoch] = mse_test.item()
+        test_mse[epoch] = mse(torch.max(output_test, 1).values, y_test).item()
+
         if (epoch + 1) % 25 == 0:
             print(
-                f"Epoch {epoch + 1}/{num_epochs}, Train Loss: {loss_train.item():.4f}, Test Loss: {loss_test.item():.4f}")
+                f"Epoch {epoch + 1}/{num_epochs}, Train Loss: {loss_train.item():.4f}, Test Loss: {loss_test.item():.4f}, MSE: {mse_test.item():.4f}")
 
-    return train_losses, test_losses
+    return train_losses, test_losses, test_mse, train_mse
 
 
 def get_accuracy_multiclass(pred_arr, original_arr):
