@@ -45,6 +45,7 @@ class NeuralNetworkClassificationModel(nn.Module):
 
 
 dataframe = lib.load_data('data/result.csv')
+lib.correlation_matrix(dataframe)
 (x_train, x_test, y_train, y_test), nbColumns = lib.extract_xy(dataframe)
 x_train, x_test, y_train, y_test = lib.normalize(x_train, x_test, y_train, y_test)
 
